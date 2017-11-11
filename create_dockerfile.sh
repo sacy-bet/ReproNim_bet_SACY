@@ -4,6 +4,11 @@ docker run --rm kaczmarj/neurodocker:master generate -b neurodebian:stretch-non-
 --add-to-entrypoint "source /etc/fsl/fsl.sh" \
 --user neuro \
 --user root \
+--miniconda env_name=neuro \
+	conda_opts="--channel vida-nyu" \
+	conda_install="python=3.5.1 numpy pandas reprozip traits" \
+	pip_install="nipype" \
+	activate=true \
 --neurodebian os_codename="stretch" \
               download_server="usa-nh" \
               pkgs="dcm2niix git-annex-standalone datalad" \

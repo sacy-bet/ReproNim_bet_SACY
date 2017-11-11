@@ -1,10 +1,13 @@
 #!/bin/bash
 
-for ds in *.nii
-do
-  fslreorient2std 202_HH_anat.nii 202_HH_anat_ro
 
-  bet 202_HH_anat_ro.nii.gz 202_HH_anat_brain -m -R
- 
-  fslstats 202_HH_anat_brain_mask.nii.gz -V
+for i in {0..1}
+do fslreorient2std Data/Set1/$i"_anat" Data/Set1/$i"_anat_ro"; bet Data/Set1/$i"_anat_ro" Data/Set1/$i"_anat_brain" -m
+fslstats Data/Set1/$i"_anat_brain_mask" -V >> Data/Set1/Male_volumes.txt
+done
+
+for i in {0..1}
+
+do fslreorient2std Data/Set2/$i"_anat" Data/Set2/$i"_anat_ro"; bet Data/Set2/$i"_anat_ro" Data/Set2/$i"_anat_brain" -m
+fslstats Data/Set2/$i"_anat_brain_mask" -V >> Data/Set2/Female_volumes.txt
 done

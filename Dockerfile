@@ -5,7 +5,7 @@
 # pull request on our GitHub repository:
 #     https://github.com/kaczmarj/neurodocker
 #
-# Timestamp: 2017-11-11 16:02:47
+# Timestamp: 2017-11-11 19:19:03
 
 FROM neurodebian:stretch-non-free
 
@@ -45,6 +45,35 @@ RUN useradd --no-user-group --create-home --shell /bin/bash neuro
 USER neuro
 
 USER root
+
+#------------------
+# Install Miniconda
+#------------------
+ENV CONDA_DIR=/opt/conda \
+    PATH=/opt/conda/bin:$PATH
+RUN echo "Downloading Miniconda installer ..." \
+    && miniconda_installer=/tmp/miniconda.sh \
+    && curl -sSL -o $miniconda_installer https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
+    && /bin/bash $miniconda_installer -b -p $CONDA_DIR \
+    && rm -f $miniconda_installer \
+    && conda config --system --prepend channels conda-forge \
+    && conda config --system --set auto_update_conda false \
+    && conda config --system --set show_channel_urls true \
+    && conda clean -tipsy && sync
+
+#-------------------------
+# Create conda environment
+#-------------------------
+RUN conda create -y -q --name neuro --channel vida-nyu python=3.5.1 \
+                                                       numpy \
+                                                       pandas \
+                                                       reprozip \
+                                                       traits \
+    && sync && conda clean -tipsy && sync \
+    && /bin/bash -c "source activate neuro \
+      && pip install -q --no-cache-dir nipype" \
+    && sync \
+    && sed -i '$isource activate neuro' $ND_ENTRYPOINT
 
 #--------------------------------------------------
 # Add NeuroDebian repository
@@ -102,6 +131,16 @@ RUN echo '{ \
     \n      "root" \
     \n    ], \
     \n    [ \
+    \n      "miniconda", \
+    \n      { \
+    \n        "env_name": "neuro", \
+    \n        "conda_opts": "--channel vida-nyu", \
+    \n        "conda_install": "python=3.5.1 numpy pandas reprozip traits", \
+    \n        "pip_install": "nipype", \
+    \n        "activate": true \
+    \n      } \
+    \n    ], \
+    \n    [ \
     \n      "neurodebian", \
     \n      { \
     \n        "os_codename": "stretch", \
@@ -118,6 +157,6 @@ RUN echo '{ \
     \n      "/home/neuro" \
     \n    ] \
     \n  ], \
-    \n  "generation_timestamp": "2017-11-11 16:02:47", \
+    \n  "generation_timestamp": "2017-11-11 19:19:03", \
     \n  "neurodocker_version": "0.3.1-21-ged92d36" \
     \n}' > /neurodocker/neurodocker_specs.json
