@@ -1,7 +1,7 @@
 # Generate Dockerfile.
-docker run --rm kaczmarj/neurodocker:master generate \
---base debian:stretch --pkg-manager apt \
---install fsl-core \ \
+docker run --rm kaczmarj/neurodocker:master generate -b neurodebian:stretch-non-free -p apt \
+--install fsl-core \
+--add-to-entrypoint "source /etc/fsl/fsl.sh" \
 --user neuro \
 --user root \
 --neurodebian os_codename="stretch" \
