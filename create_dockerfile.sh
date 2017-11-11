@@ -1,11 +1,7 @@
 # Generate Dockerfile.
 docker run --rm kaczmarj/neurodocker:master generate \
 --base debian:stretch --pkg-manager apt \
---afni version=latest \
---ants version=2.2.0 \
---c3d version=1.0.0 \
 --dcm2niix version=latest \
---freesurfer version=6.0.0 min=true \
 --fsl version=5.0.10 \
 --minc version=1.9.15 \
 --user neuro \
@@ -24,7 +20,6 @@ docker run --rm kaczmarj/neurodocker:master generate \
               download_server="usa-nh" \
               pkgs="dcm2niix git-annex-standalone datalad" \
 --petpvc version=1.2.0-b \
---spm version=12 matlab_version=R2017a \
 --install git vim \
 --user neuro \
 --workdir /home/neuro \
