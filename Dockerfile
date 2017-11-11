@@ -5,9 +5,9 @@
 # pull request on our GitHub repository:
 #     https://github.com/kaczmarj/neurodocker
 #
-# Timestamp: 2017-11-11 15:28:31
+# Timestamp: 2017-11-11 16:02:47
 
-FROM debian:stretch
+FROM neurodebian:stretch-non-free
 
 ARG DEBIAN_FRONTEND=noninteractive
 
@@ -32,115 +32,19 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends  \
     && chmod -R 777 /neurodocker && chmod a+s /neurodocker
 ENTRYPOINT ["/neurodocker/startup.sh"]
 
-#------------------------
-# Install dcm2niix master
-#------------------------
-WORKDIR /tmp
-RUN deps='cmake g++ gcc git make pigz zlib1g-dev' \
-    && apt-get update -qq && apt-get install -yq --no-install-recommends $deps \
+RUN apt-get update -qq \
+    && apt-get install -y -q --no-install-recommends fsl-core \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && mkdir dcm2niix \
-    && curl -sSL https://github.com/rordenlab/dcm2niix/tarball/master | tar xz -C dcm2niix --strip-components 1 \
-    && mkdir dcm2niix/build && cd dcm2niix/build \
-    && cmake .. && make \
-    && make install \
-    && rm -rf /tmp/* \
-    && apt-get purge -y --auto-remove $deps
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-#-----------------------------------------------------------
-# Install FSL v5.0.10
-# FSL is non-free. If you are considering commerical use
-# of this Docker image, please consult the relevant license:
-# https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence
-#-----------------------------------------------------------
-RUN apt-get update -qq && apt-get install -yq --no-install-recommends bc dc libfontconfig1 libfreetype6 libgl1-mesa-dev libglu1-mesa-dev libgomp1 libice6 libmng1 libxcursor1 libxft2 libxinerama1 libxrandr2 libxrender1 libxt6 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && echo "Downloading FSL ..." \
-    && curl -sSL https://fsl.fmrib.ox.ac.uk/fsldownloads/fsl-5.0.10-centos6_64.tar.gz \
-    | tar zx -C /opt \
-    && /bin/bash /opt/fsl/etc/fslconf/fslpython_install.sh -q -f /opt/fsl \
-    && sed -i '$iecho Some packages in this Docker container are non-free' $ND_ENTRYPOINT \
-    && sed -i '$iecho If you are considering commercial use of this container, please consult the relevant license:' $ND_ENTRYPOINT \
-    && sed -i '$iecho https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/Licence' $ND_ENTRYPOINT \
-    && sed -i '$isource $FSLDIR/etc/fslconf/fsl.sh' $ND_ENTRYPOINT
-ENV FSLDIR=/opt/fsl \
-    PATH=/opt/fsl/bin:$PATH
-
-#--------------------
-# Install MINC 1.9.15
-#--------------------
-RUN apt-get update -qq && apt-get install -yq --no-install-recommends libgl1-mesa-dev libice6 libsm6 libx11-6 libxext6 libxi6 libxmu6 libgomp1 libjpeg62 \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-    && echo " Downloading MINC, BEASTLIB, and MODELS..." \
-    && curl -sSL --retry 5 https://dl.dropbox.com/s/40hjzizaqi91373/minc-toolkit-1.9.15-20170529-CentOS_6.9-x86_64.tar.gz \
-    | tar zx -C /opt \
-    && curl -sSL --retry 5 http://packages.bic.mni.mcgill.ca/tgz/beast-library-1.1.tar.gz \
-    | tar zx -C /opt/minc/share \
-    && curl -sSL --retry 5 -o /tmp/mni_90a.zip http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09a_minc2.zip \
-    && unzip /tmp/mni_90a.zip -d /opt/minc/share/icbm152_model_09a \
-    && curl -sSL --retry 5 -o /tmp/mni_90c.zip http://www.bic.mni.mcgill.ca/~vfonov/icbm/2009/mni_icbm152_nlin_sym_09c_minc2.zip \
-    && unzip /tmp/mni_90c.zip -d /opt/minc/share/icbm152_model_09c \
-    && rm -r /tmp/mni_90*  \
-    && sed -i '$isource /opt/minc/minc-toolkit-config.sh' $ND_ENTRYPOINT
+# Add command(s) to entrypoint
+RUN sed -i '$isource /etc/fsl/fsl.sh' $ND_ENTRYPOINT
 
 # Create new user: neuro
 RUN useradd --no-user-group --create-home --shell /bin/bash neuro
 USER neuro
 
-#------------------
-# Install Miniconda
-#------------------
-ENV CONDA_DIR=/opt/conda \
-    PATH=/opt/conda/bin:$PATH
-RUN echo "Downloading Miniconda installer ..." \
-    && miniconda_installer=/tmp/miniconda.sh \
-    && curl -sSL -o $miniconda_installer https://repo.continuum.io/miniconda/Miniconda3-latest-Linux-x86_64.sh \
-    && /bin/bash $miniconda_installer -b -p $CONDA_DIR \
-    && rm -f $miniconda_installer \
-    && conda config --system --prepend channels conda-forge \
-    && conda config --system --set auto_update_conda false \
-    && conda config --system --set show_channel_urls true \
-    && conda clean -tipsy && sync
-
-#-------------------------
-# Create conda environment
-#-------------------------
-RUN conda create -y -q --name neuro --channel vida-nyu python=3.5.1 \
-                                                       numpy \
-                                                       pandas \
-                                                       reprozip \
-                                                       traits \
-    && sync && conda clean -tipsy && sync \
-    && /bin/bash -c "source activate neuro \
-      && pip install -q --no-cache-dir nipype" \
-    && sync \
-    && sed -i '$isource activate neuro' $ND_ENTRYPOINT
-
-#-------------------------
-# Update conda environment
-#-------------------------
-RUN /bin/bash -c "source activate neuro \
-      && pip install -q --no-cache-dir pylsl" \
-    && sync
-
-#-------------------------
-# Create conda environment
-#-------------------------
-RUN conda create -y -q --name py27 python=2.7 \
-    && sync && conda clean -tipsy && sync
-
 USER root
-
-#----------------
-# Install MRtrix3
-#----------------
-RUN echo "Downloading MRtrix3 ..." \
-    && curl -sSL --retry 5 https://dl.dropbox.com/s/2g008aaaeht3m45/mrtrix3-Linux-centos6.tar.gz \
-    | tar zx -C /opt
-ENV PATH=/opt/mrtrix3/bin:$PATH
 
 #--------------------------------------------------
 # Add NeuroDebian repository
@@ -162,20 +66,6 @@ RUN apt-get update -qq && apt-get install -yq --no-install-recommends dcm2niix g
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-#--------------------
-# Install PETPVC 1.2.0-b
-#--------------------
-RUN echo "Downloading PETPVC..." \
-    && mkdir /opt/petpvc \
-    && curl --retry 5 -sSL https://github.com/UCL/PETPVC/releases/download/v1.2.0-b/PETPVC-1.2.0-b-Linux.tar.gz| tar zx --strip-components=1 -C /opt/petpvc
-ENV PATH=/opt/petpvc/bin:$PATH
-
-RUN apt-get update -qq \
-    && apt-get install -y -q --no-install-recommends git \
-                                                     vim \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
 USER neuro
 
 WORKDIR /home/neuro
@@ -189,61 +79,27 @@ RUN echo '{ \
     \n  "instructions": [ \
     \n    [ \
     \n      "base", \
-    \n      "debian:stretch" \
+    \n      "neurodebian:stretch-non-free" \
     \n    ], \
     \n    [ \
-    \n      "dcm2niix", \
-    \n      { \
-    \n        "version": "latest" \
-    \n      } \
+    \n      "install", \
+    \n      [ \
+    \n        "fsl-core" \
+    \n      ] \
     \n    ], \
     \n    [ \
-    \n      "fsl", \
-    \n      { \
-    \n        "version": "5.0.10" \
-    \n      } \
-    \n    ], \
-    \n    [ \
-    \n      "minc", \
-    \n      { \
-    \n        "version": "1.9.15" \
-    \n      } \
+    \n      "add_to_entrypoint", \
+    \n      [ \
+    \n        "source /etc/fsl/fsl.sh" \
+    \n      ] \
     \n    ], \
     \n    [ \
     \n      "user", \
     \n      "neuro" \
     \n    ], \
     \n    [ \
-    \n      "miniconda", \
-    \n      { \
-    \n        "env_name": "neuro", \
-    \n        "conda_opts": "--channel vida-nyu", \
-    \n        "conda_install": "python=3.5.1 numpy pandas reprozip traits", \
-    \n        "pip_install": "nipype", \
-    \n        "activate": true \
-    \n      } \
-    \n    ], \
-    \n    [ \
-    \n      "miniconda", \
-    \n      { \
-    \n        "env_name": "neuro", \
-    \n        "pip_install": "pylsl" \
-    \n      } \
-    \n    ], \
-    \n    [ \
-    \n      "miniconda", \
-    \n      { \
-    \n        "env_name": "py27", \
-    \n        "conda_install": "python=2.7" \
-    \n      } \
-    \n    ], \
-    \n    [ \
     \n      "user", \
     \n      "root" \
-    \n    ], \
-    \n    [ \
-    \n      "mrtrix3", \
-    \n      {} \
     \n    ], \
     \n    [ \
     \n      "neurodebian", \
@@ -254,19 +110,6 @@ RUN echo '{ \
     \n      } \
     \n    ], \
     \n    [ \
-    \n      "petpvc", \
-    \n      { \
-    \n        "version": "1.2.0-b" \
-    \n      } \
-    \n    ], \
-    \n    [ \
-    \n      "install", \
-    \n      [ \
-    \n        "git", \
-    \n        "vim" \
-    \n      ] \
-    \n    ], \
-    \n    [ \
     \n      "user", \
     \n      "neuro" \
     \n    ], \
@@ -275,6 +118,6 @@ RUN echo '{ \
     \n      "/home/neuro" \
     \n    ] \
     \n  ], \
-    \n  "generation_timestamp": "2017-11-11 15:28:31", \
+    \n  "generation_timestamp": "2017-11-11 16:02:47", \
     \n  "neurodocker_version": "0.3.1-21-ged92d36" \
     \n}' > /neurodocker/neurodocker_specs.json
