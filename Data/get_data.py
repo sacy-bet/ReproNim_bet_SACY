@@ -10,7 +10,7 @@ for subject in range(0,len(males_data)):
     
     
     
-with open('Female_15subj_url.txt.txt') as url_females:
+with open('Female_15subj_url.txt') as url_females:
     females_data = [line.strip() for line in url_females.readlines()]
 
 for subject in range(0,len(females_data)):
