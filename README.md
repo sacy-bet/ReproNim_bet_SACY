@@ -4,7 +4,7 @@ See available docker images:
 `docker images`
 
 Run docker image:
-`docker run -it --rm myimage`
+`docker run -it -v ~/ReproNim_bet_SACY:/home/neuro --rm myimage`
 
 Typical git workflow:
 ```
