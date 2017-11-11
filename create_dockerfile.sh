@@ -23,7 +23,7 @@ docker run --rm kaczmarj/neurodocker:master generate \
 --install git vim \
 --user neuro \
 --workdir /home/neuro \
---no-check-urls > examples/generated-full.Dockerfile
+--no-check-urls > Dockerfile
 
 # Build Docker image using the saved Dockerfile.
-docker build -t myimage -f generated-full.Dockerfile examples
+docker build -t myimage -f Dockerfile .
