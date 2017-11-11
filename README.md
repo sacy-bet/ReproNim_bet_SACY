@@ -8,7 +8,7 @@ make the create_docker.sh
 
 =======
 Run docker image to fetch 15 male and 15 female brains, BET and do ttest on the Volume:
-`ddocker run -it -v /Users/bodhi/Desktop/ReproNim2017/ReproNim_bet_SACY/:/home/neuro --rm myimage ./run_all.sh`
+`docker run -it -v /Users/bodhi/Desktop/ReproNim2017/ReproNim_bet_SACY/:/home/neuro --rm myimage ./run_all.sh`
 >>>>>>> External Changes
 
 Typical git workflow:
