@@ -1,0 +1,2 @@
+https://s3.amazonaws.com/sfn-17/Beijing_sub17688_anat.nii
+https://s3.amazonaws.com/sfn-17/AnnArbor_sub59573_anat.nii

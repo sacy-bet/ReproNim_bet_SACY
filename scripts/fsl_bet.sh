@@ -1,10 +1,15 @@
 #!/bin/bash
 
-for ds in *.nii
-do
-  fslreorient2std 202_HH_anat.nii 202_HH_anat_ro
+echo "PROCESSING MALE SUBJECTS" > Male_volumes.txt
+for i in {0..14}
+do echo "PROCESSING SUBJECT " $i >> Male_volumes.txt
+fslreorient2std $i"_anat" $i"_anat_ro"; bet $i"_anat_ro" $i"_anat_brain" -m
+fslstats $i"_anat_brain_mask" -V >> Male_volumes.txt
+done
 
-  bet 202_HH_anat_ro.nii.gz 202_HH_anat_brain -m -R
- 
-  fslstats 202_HH_anat_brain_mask.nii.gz -V
+echo "PROCESSING FEMALE SUBJECTS" > Female_volumes.txt
+for i in {0..14}
+do echo "PROCESSING SUBJECT " $i >> Female_volumes.txt
+fslreorient2std $i"_anat" $i"_anat_ro"; bet $i"_anat_ro" $i"_anat_brain" -m
+fslstats $i"_anat_brain_mask" -V >> Female_volumes.txt
 done
