@@ -5,3 +5,10 @@ See available docker images:
 
 Run docker image:
 `docker run -it --rm myimage`
+
+Typical git workflow:
+```
+git add new_script.sh
+git commit -m "Created new_script.sh"
+git push
+```
