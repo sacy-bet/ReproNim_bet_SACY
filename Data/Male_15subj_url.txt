@@ -1,0 +1,15 @@
+https://s3.amazonaws.com/sfn-17/Bangor_sub73082_anat.nii
+https://s3.amazonaws.com/sfn-17/Leiden_sub72247_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub69696_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub07144_anat.nii
+https://s3.amazonaws.com/sfn-17/64_Guys_anat.nii
+https://s3.amazonaws.com/sfn-17/Leiden_sub93194_anat.nii
+https://s3.amazonaws.com/sfn-17/AnnArbor_sub34781_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub39725_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub59448_anat.nii
+https://s3.amazonaws.com/sfn-17/Cambridge_sub40635_anat.nii
+https://s3.amazonaws.com/sfn-17/Cambridge_sub90059_anat.nii
+https://s3.amazonaws.com/sfn-17/Cambridge_sub69397_anat.nii
+https://s3.amazonaws.com/sfn-17/202_HH_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub01018_anat.nii
+https://s3.amazonaws.com/sfn-17/Leiden_sub66131_anat.nii

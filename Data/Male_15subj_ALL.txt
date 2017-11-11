@@ -1,0 +1,15 @@
+Beijing_sub17586    fcon_1000  M    19   https://s3.amazonaws.com/sfn-17/Beijing_sub17586_anat.nii
+Beijing_sub59448    fcon_1000  M    20   https://s3.amazonaws.com/sfn-17/Beijing_sub59448_anat.nii
+Cambridge_sub14194  fcon_1000  M    20   https://s3.amazonaws.com/sfn-17/Cambridge_sub14194_anat.nii
+Cambridge_sub12346  fcon_1000  M    18   https://s3.amazonaws.com/sfn-17/Cambridge_sub12346_anat.nii
+Beijing_sub31058    fcon_1000  M    20   https://s3.amazonaws.com/sfn-17/Beijing_sub31058_anat.nii
+Cambridge_sub99330  fcon_1000  M    18   https://s3.amazonaws.com/sfn-17/Cambridge_sub99330_anat.nii
+Leiden_sub19281     fcon_1000  M    20   https://s3.amazonaws.com/sfn-17/Leiden_sub19281_anat.nii
+Beijing_sub39725    fcon_1000  M    20   https://s3.amazonaws.com/sfn-17/Beijing_sub39725_anat.nii
+AnnArbor_sub53959   fcon_1000  M    20   https://s3.amazonaws.com/sfn-17/AnnArbor_sub53959_anat.nii
+Cambridge_sub40635  fcon_1000  M    18   https://s3.amazonaws.com/sfn-17/Cambridge_sub40635_anat.nii
+Cambridge_sub90059  fcon_1000  M    19   https://s3.amazonaws.com/sfn-17/Cambridge_sub90059_anat.nii
+Cambridge_sub86115  fcon_1000  M    20   https://s3.amazonaws.com/sfn-17/Cambridge_sub86115_anat.nii
+AnnArbor_sub64831   fcon_1000  M    19   https://s3.amazonaws.com/sfn-17/AnnArbor_sub64831_anat.nii
+AnnArbor_sub72215   fcon_1000  M    20   https://s3.amazonaws.com/sfn-17/AnnArbor_sub72215_anat.nii
+Beijing_sub14238    fcon_1000  M    20   https://s3.amazonaws.com/sfn-17/Beijing_sub14238_anat.nii

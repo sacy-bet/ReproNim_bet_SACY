@@ -1,0 +1,15 @@
+https://s3.amazonaws.com/sfn-17/Beijing_sub17688_anat.nii
+https://s3.amazonaws.com/sfn-17/AnnArbor_sub59573_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub62843_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub80551_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub06899_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub17315_anat.nii
+https://s3.amazonaws.com/sfn-17/AnnArbor_sub33437_anat.nii
+https://s3.amazonaws.com/sfn-17/Cambridge_sub51172_anat.nii
+https://s3.amazonaws.com/sfn-17/Cambridge_sub11388_anat.nii
+https://s3.amazonaws.com/sfn-17/Cambridge_sub88445_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub85543_anat.nii
+https://s3.amazonaws.com/sfn-17/Cambridge_sub49998_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub68597_anat.nii
+https://s3.amazonaws.com/sfn-17/Beijing_sub50985_anat.nii
+https://s3.amazonaws.com/sfn-17/Cambridge_sub95187_anat.nii
